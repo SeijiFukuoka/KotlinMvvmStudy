@@ -1,8 +1,8 @@
 package br.com.seiji.kotlinmvvmtest.di
 
 import android.app.Application
+import br.com.seiji.kotlinmvvmtest.BuildConfig
 import br.com.seiji.kotlinmvvmtest.api.ApiService
-import br.com.seiji.kotlinmvvmtest.repository.Repository
 import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
@@ -40,7 +40,9 @@ class AppModule {
     @Singleton
     fun provideOkHttpClient(application: Application): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        interceptor.level = HttpLoggingInterceptor.Level.NONE
+        if (BuildConfig.DEBUG)
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val cacheDir = File(application.cacheDir, UUID.randomUUID().toString())
         // 10 MiB cache
@@ -65,8 +67,4 @@ class AppModule {
                 .client(okHttpClient)
                 .build().create(ApiService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideRepository(apiService: ApiService): Repository = Repository(apiService)
 }
