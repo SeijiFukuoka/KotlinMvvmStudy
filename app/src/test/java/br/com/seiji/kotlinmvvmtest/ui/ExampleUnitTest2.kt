@@ -1,4 +1,4 @@
-package seiji.com.br.kotlinmvvmtest
+package br.com.seiji.kotlinmvvmtest.ui
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -8,7 +8,7 @@ import org.junit.Test
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class ExampleUnitTest2 {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)

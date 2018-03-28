@@ -5,8 +5,9 @@ import br.com.seiji.kotlinmvvmtest.CustomApplication
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import javax.inject.Singleton
 
-
+@Singleton
 @Component(modules = arrayOf(AndroidInjectionModule::class, AppModule::class, ActivityBuilder::class))
 interface AppComponent {
 

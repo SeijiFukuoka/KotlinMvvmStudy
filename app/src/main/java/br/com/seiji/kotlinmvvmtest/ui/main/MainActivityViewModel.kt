@@ -1,11 +1,13 @@
 package br.com.seiji.kotlinmvvmtest.ui.main
 
-import android.util.Log
+import br.com.seiji.kotlinmvvmtest.api.model.MyModel
+import br.com.seiji.kotlinmvvmtest.repository.Repository
+import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
+import io.reactivex.Single
 
-class MainActivityViewModel {
+class MainActivityViewModel(private val repository: Repository, private val schedulerProvider: SchedulerProvider) {
 
-    fun doSomething() {
-        Log.d("MainActivityViewModel", "doSomething")
-    }
+    fun showDataFromApi(): Single<MyModel> = repository.getDataFromApi()
+            .compose(schedulerProvider.getSchedulersForSingle())
 
 }

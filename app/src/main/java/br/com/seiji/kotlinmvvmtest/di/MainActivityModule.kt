@@ -1,6 +1,8 @@
 package br.com.seiji.kotlinmvvmtest.di
 
+import br.com.seiji.kotlinmvvmtest.repository.Repository
 import br.com.seiji.kotlinmvvmtest.ui.main.MainActivityViewModel
+import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 
@@ -8,6 +10,6 @@ import dagger.Provides
 class MainActivityModule {
 
     @Provides
-    fun provideViewModel() = MainActivityViewModel()
+    fun provideViewModel(repository: Repository, schedulerProvider: SchedulerProvider) = MainActivityViewModel(repository, schedulerProvider)
 
 }

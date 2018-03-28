@@ -58,6 +58,7 @@ dependencies {
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-inline:2.11.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
