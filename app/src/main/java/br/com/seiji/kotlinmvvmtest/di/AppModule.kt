@@ -3,6 +3,7 @@ package br.com.seiji.kotlinmvvmtest.di
 import android.app.Application
 import br.com.seiji.kotlinmvvmtest.BuildConfig
 import br.com.seiji.kotlinmvvmtest.api.ApiService
+import br.com.seiji.kotlinmvvmtest.api.model.Constants
 import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
@@ -21,6 +22,7 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
 
 @Module
 class AppModule {
@@ -61,7 +63,7 @@ class AppModule {
     @Singleton
     fun provideApiService(gson: Gson, okHttpClient: OkHttpClient): ApiService {
         return Retrofit.Builder()
-                .baseUrl("http://ip.jsontest.com/")
+                .baseUrl(Constants.API__BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)

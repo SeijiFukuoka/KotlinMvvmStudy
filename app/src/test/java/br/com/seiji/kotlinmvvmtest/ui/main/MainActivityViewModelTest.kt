@@ -1,6 +1,6 @@
 package br.com.seiji.kotlinmvvmtest.ui.main
 
-import br.com.seiji.kotlinmvvmtest.api.model.MyModel
+import br.com.seiji.kotlinmvvmtest.api.model.GitHubRepositoryListResponse
 import br.com.seiji.kotlinmvvmtest.repository.Repository
 import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
 import io.reactivex.Single
@@ -29,9 +29,9 @@ class MainActivityViewModelTest {
 
     @Test
     fun showDataFromApi() {
-        Mockito.`when`(mockRepository.getDataFromApi()).thenReturn(Single.just(MyModel("20.0.0.0")))
+        Mockito.`when`(mockRepository.getDataFromApi()).thenReturn(Single.just(GitHubRepositoryListResponse("20.0.0.0")))
 
-        val testObserver = TestObserver<MyModel>()
+        val testObserver = TestObserver<GitHubRepositoryListResponse>()
 
         mainActivityViewModel.showDataFromApi()
                 .subscribe(testObserver)

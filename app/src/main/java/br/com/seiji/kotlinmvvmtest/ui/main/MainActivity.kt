@@ -19,9 +19,9 @@ class MainActivity : DaggerActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        compositeDisposable.add(mainActivityViewModel.showDataFromApi()
+        compositeDisposable.add(mainActivityViewModel.showDataFromApi("kotlin", "stars", 1)
                 .subscribeBy(onSuccess = {
-                    Log.d("MainActivity", it.ip)
+                    Log.d("MainActivity", it.total_count.toString())
                 }, onError = {
                     Log.d("MainActivity", it.message)
                 }))
