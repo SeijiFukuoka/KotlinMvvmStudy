@@ -1,6 +1,6 @@
-package br.com.seiji.kotlinmvvmtest.api
+package br.com.seiji.kotlinmvvmtest.data.remote
 
-import br.com.seiji.kotlinmvvmtest.api.model.GitHubRepositoryListResponse
+import br.com.seiji.kotlinmvvmtest.domain.GitHubRepositoryListResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -2,8 +2,8 @@ package br.com.seiji.kotlinmvvmtest.di
 
 import android.app.Application
 import br.com.seiji.kotlinmvvmtest.BuildConfig
-import br.com.seiji.kotlinmvvmtest.api.ApiService
-import br.com.seiji.kotlinmvvmtest.api.model.Constants
+import br.com.seiji.kotlinmvvmtest.data.remote.ApiService
+import br.com.seiji.kotlinmvvmtest.domain.Constants
 import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson

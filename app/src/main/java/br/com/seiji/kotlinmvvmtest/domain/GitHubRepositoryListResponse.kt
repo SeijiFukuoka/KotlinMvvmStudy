@@ -1,8 +1,8 @@
-package br.com.seiji.kotlinmvvmtest.api.model
+package br.com.seiji.kotlinmvvmtest.domain
 
 
 data class GitHubRepositoryListResponse(
         val total_count: Int,
         val incomplete_results: Boolean,
-        val items: List<GitHubRepository>
+        val items: List<Repo>
 )

@@ -1,6 +1,6 @@
 package br.com.seiji.kotlinmvvmtest.di
 
-import br.com.seiji.kotlinmvvmtest.ui.main.MainActivity
+import br.com.seiji.kotlinmvvmtest.view.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

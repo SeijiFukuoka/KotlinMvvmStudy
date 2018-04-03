@@ -1,4 +1,4 @@
-package br.com.seiji.kotlinmvvmtest.api.model
+package br.com.seiji.kotlinmvvmtest.domain
 
 class Constants {
 

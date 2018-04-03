@@ -1,8 +1,9 @@
 package br.com.seiji.kotlinmvvmtest.ui.main
 
-import br.com.seiji.kotlinmvvmtest.api.model.GitHubRepositoryListResponse
-import br.com.seiji.kotlinmvvmtest.repository.Repository
+import br.com.seiji.kotlinmvvmtest.domain.GitHubRepositoryListResponse
+import br.com.seiji.kotlinmvvmtest.data.repository.GitHubRepository
 import br.com.seiji.kotlinmvvmtest.util.SchedulerProvider
+import br.com.seiji.kotlinmvvmtest.view.MainActivityViewModel
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
@@ -15,7 +16,7 @@ import org.mockito.MockitoAnnotations
 class MainActivityViewModelTest {
 
     @Mock
-    private lateinit var mockRepository: Repository
+    private lateinit var mockGitHubRepository: GitHubRepository
 
     private val schedulerProvider = SchedulerProvider(Schedulers.trampoline(), Schedulers.trampoline())
 
@@ -24,12 +25,12 @@ class MainActivityViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        mainActivityViewModel = MainActivityViewModel(mockRepository, schedulerProvider)
+        mainActivityViewModel = MainActivityViewModel(mockGitHubRepository, schedulerProvider)
     }
 
     @Test
     fun showDataFromApi() {
-        Mockito.`when`(mockRepository.getDataFromApi()).thenReturn(Single.just(GitHubRepositoryListResponse("20.0.0.0")))
+        Mockito.`when`(mockGitHubRepository.getDataFromApi()).thenReturn(Single.just(GitHubRepositoryListResponse("20.0.0.0")))
 
         val testObserver = TestObserver<GitHubRepositoryListResponse>()
 

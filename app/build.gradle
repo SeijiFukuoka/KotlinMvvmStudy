@@ -40,6 +40,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$rootProject.architectureComponentsVersion"
     kapt "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
     implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlinVersion"
