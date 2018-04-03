@@ -1,23 +1,14 @@
 package br.com.seiji.kotlinmvvmtest.di
 
-import android.app.Application
-import br.com.seiji.kotlinmvvmtest.CustomApplication
-import dagger.BindsInstance
+import br.com.seiji.kotlinmvvmtest.view.RepositoriesViewModel
 import dagger.Component
-import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
+
+@Component(modules = arrayOf(AppModule::class, RoomModule::class, RemoteModule::class))
 @Singleton
-@Component(modules = arrayOf(AndroidInjectionModule::class, AppModule::class, RoomModule::class, ActivityBuilder::class))
 interface AppComponent {
 
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(app: Application): Builder
+    fun inject(repositoriesViewModel: RepositoriesViewModel)
 
-        fun build(): AppComponent
-    }
-
-    fun inject(app: CustomApplication)
 }

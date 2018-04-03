@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.seiji.kotlinmvvmtest.R
-import javax.inject.Inject
 
 
 class ListFragment : Fragment() {
@@ -34,10 +33,7 @@ class ListFragment : Fragment() {
         fun newInstance() = ListFragment()
     }
 
-    @Inject
-    internal lateinit var viewModelFactory: GithubViewModelFactory
-
-    private var mainActivityViewModel: MainActivityViewModel? = null
+    private lateinit var repositoriesViewModel: RepositoriesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,14 +44,10 @@ class ListFragment : Fragment() {
         return inflater.inflate(R.layout.activity_main, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     private fun initViewModel() {
-        mainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
-        mainActivityViewModel?.let { lifecycle.addObserver(it) }
-        mainActivityViewModel?.getRepositoriesList("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
+        repositoriesViewModel = ViewModelProviders.of(this).get(RepositoriesViewModel::class.java)
+        repositoriesViewModel.let { lifecycle.addObserver(it) }
+        repositoriesViewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
             Log.d(MainActivity::class.java.simpleName, repositoriesList?.get(0)?.name)
         })
     }

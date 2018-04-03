@@ -1,24 +1,28 @@
 package br.com.seiji.kotlinmvvmtest.view
 
 import android.arch.lifecycle.*
+import br.com.seiji.kotlinmvvmtest.CustomApplication
 import br.com.seiji.kotlinmvvmtest.data.repository.GitHubRepository
 import br.com.seiji.kotlinmvvmtest.domain.Repo
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-
-class MainActivityViewModel : ViewModel(), LifecycleObserver {
+class RepositoriesViewModel : ViewModel(), LifecycleObserver {
 
     @Inject
     lateinit var repository: GitHubRepository
 
     private val compositeDisposable = CompositeDisposable()
-    private lateinit var liveRepositoryData: LiveData<List<Repo>>
+    private lateinit var liveAvailableExchange: LiveData<List<Repo>>
 
-    fun getRepositoriesList(query: String, sort: String, page: Int): LiveData<List<Repo>>? {
-        liveRepositoryData = MutableLiveData<List<Repo>>()
-        liveRepositoryData = repository.getRepositoriesList(query, sort, page)
-        return liveRepositoryData
+    init {
+        initializeDagger()
+    }
+
+    fun getRespositories(query: String, sort: String, page: Int): LiveData<List<Repo>> {
+        liveAvailableExchange = MutableLiveData<List<Repo>>()
+        liveAvailableExchange = repository.getRepositoriesList(query, sort, page)
+        return liveAvailableExchange
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -33,4 +37,8 @@ class MainActivityViewModel : ViewModel(), LifecycleObserver {
         unSubscribeViewModel()
         super.onCleared()
     }
+
+    private fun initializeDagger() = CustomApplication.appComponent.inject(this)
 }
+
+

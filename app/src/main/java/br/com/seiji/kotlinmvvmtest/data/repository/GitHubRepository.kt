@@ -23,24 +23,9 @@ class GitHubRepository @Inject constructor(
             roomDataSource.repositoriesDao().getRepositoriesTotal()
 
     override fun addRepositories() {
-//        val repositoriesEntityList = RoomRepositoriesDataSource.
-//        roomDataSource.repositoriesDao().insertAll(repositoriesEntityList)
     }
 
     override fun getRepositoriesList(query: String, sort: String, page: Int): LiveData<List<Repo>> {
-//        val roomDao = roomDataSource.repositoriesDao()
-//        val mutableLiveData = MutableLiveData<List<Repo>>()
-//        val disposable = roomDao.getAllRepositories()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ repositoriesList ->
-//                    mutableLiveData.value = transform(repositoriesList)
-//                }, { t: Throwable ->
-//                    t!!.printStackTrace()
-//                })
-//        allCompositeDisposable.add(disposable)
-//        return mutableLiveData
-
         val mutableLiveData = MutableLiveData<List<Repo>>()
         val disposable = remoteDataSource.requestRepositoriesList(query, sort, page)
                 .subscribeOn(Schedulers.io())
@@ -50,9 +35,5 @@ class GitHubRepository @Inject constructor(
                 }, { t: Throwable? -> t!!.printStackTrace() })
         allCompositeDisposable.add(disposable)
         return mutableLiveData
-    }
-
-    private companion object {
-        var TAG = GitHubRepository::class.simpleName
     }
 }
