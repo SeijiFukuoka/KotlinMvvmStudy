@@ -16,22 +16,32 @@
 
 package br.com.seiji.kotlinmvvmtest.di
 
+import android.os.Build
+import android.util.Log
+import br.com.seiji.kotlinmvvmtest.BuildConfig
+import br.com.seiji.kotlinmvvmtest.CustomApplication
 import br.com.seiji.kotlinmvvmtest.data.remote.ApiService
 import br.com.seiji.kotlinmvvmtest.domain.Constants
+import br.com.seiji.kotlinmvvmtest.util.Tls12SocketFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
+import okhttp3.Cache
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.util.*
 import javax.inject.Singleton
-
+import javax.net.ssl.SSLContext
 
 @Module
-class RemoteModule {
+class RemoteModule(private val customApplication: CustomApplication) {
 
     @Provides
     @Singleton
@@ -42,10 +52,50 @@ class RemoteModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient =
-            OkHttpClient.Builder()
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .build()
+    fun provideOkHttpClient(): OkHttpClient {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.NONE
+        if (BuildConfig.DEBUG)
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        val cacheDir = File(customApplication.cacheDir, UUID.randomUUID().toString())
+        val cache = Cache(cacheDir, 10 * 1024 * 1024)
+
+        val client: OkHttpClient.Builder = OkHttpClient.Builder()
+                .cache(cache)
+                .addInterceptor(interceptor)
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .retryOnConnectionFailure(true)
+
+        return enableTls12OnPreLollipop(client).build()
+    }
+
+    @Provides
+    @Singleton
+    fun enableTls12OnPreLollipop(client: OkHttpClient.Builder): OkHttpClient.Builder {
+        if (Build.VERSION.SDK_INT in 19..21) {
+            try {
+                val sc = SSLContext.getInstance("TLSv1.2")
+                sc.init(null, null, null)
+                client.sslSocketFactory(Tls12SocketFactory(sc.socketFactory))
+
+                val cs = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                        .tlsVersions(TlsVersion.TLS_1_2)
+                        .build()
+
+                val specs = ArrayList<ConnectionSpec>()
+                specs.add(cs)
+                specs.add(ConnectionSpec.COMPATIBLE_TLS)
+                specs.add(ConnectionSpec.CLEARTEXT)
+
+                client.connectionSpecs(specs)
+            } catch (exc: Exception) {
+                Log.e("OkHttpTLSCompat", "Error while setting TLS 1.2", exc)
+            }
+        }
+        return client
+    }
 
     @Provides
     @Singleton

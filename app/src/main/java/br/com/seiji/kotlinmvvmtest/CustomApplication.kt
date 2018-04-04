@@ -19,6 +19,6 @@ class CustomApplication : Application() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .roomModule(RoomModule())
-                .remoteModule(RemoteModule()).build()
+                .remoteModule(RemoteModule(this)).build()
     }
 }
