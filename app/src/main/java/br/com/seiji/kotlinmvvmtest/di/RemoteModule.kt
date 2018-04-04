@@ -16,11 +16,15 @@
 
 package br.com.seiji.kotlinmvvmtest.di
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import br.com.seiji.kotlinmvvmtest.BuildConfig
 import br.com.seiji.kotlinmvvmtest.CustomApplication
 import br.com.seiji.kotlinmvvmtest.data.remote.ApiService
+import br.com.seiji.kotlinmvvmtest.data.remote.GitHubDataSource
+import br.com.seiji.kotlinmvvmtest.data.repository.GitHubRepository
+import br.com.seiji.kotlinmvvmtest.data.room.RoomRepositoriesDataSource
 import br.com.seiji.kotlinmvvmtest.domain.Constants
 import br.com.seiji.kotlinmvvmtest.util.Tls12SocketFactory
 import com.google.gson.Gson
@@ -28,20 +32,23 @@ import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
-import okhttp3.Cache
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
 import java.util.*
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 
 @Module
-class RemoteModule(private val customApplication: CustomApplication) {
+class RemoteModule(val app: CustomApplication) {
+
+    @Provides
+    fun providesContext(application: CustomApplication): Context {
+        return application.applicationContext
+    }
 
     @Provides
     @Singleton
@@ -58,11 +65,10 @@ class RemoteModule(private val customApplication: CustomApplication) {
         if (BuildConfig.DEBUG)
             interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val cacheDir = File(customApplication.cacheDir, UUID.randomUUID().toString())
-        val cache = Cache(cacheDir, 10 * 1024 * 1024)
+//        val cacheDir = File(customApplication.cacheDir, UUID.randomUUID().toString())
+//        val cache = Cache(cacheDir, 10 * 1024 * 1024)
 
         val client: OkHttpClient.Builder = OkHttpClient.Builder()
-                .cache(cache)
                 .addInterceptor(interceptor)
                 .followRedirects(true)
                 .followSslRedirects(true)
@@ -112,6 +118,14 @@ class RemoteModule(private val customApplication: CustomApplication) {
     @Singleton
     fun provideRemoteCurrencyService(retrofit: Retrofit): ApiService =
             retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideRemoteDataSource(apiService: ApiService): GitHubDataSource = GitHubDataSource(apiService)
+
+    @Provides
+    @Singleton
+    fun provideRepository(gitHubDataSource: GitHubDataSource, roomRepositoriesDataSource: RoomRepositoriesDataSource): GitHubRepository = GitHubRepository(gitHubDataSource, roomRepositoriesDataSource)
 }
 
 

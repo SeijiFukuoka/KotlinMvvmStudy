@@ -53,9 +53,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
 
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android:$rootProject.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    kapt 'com.google.dagger:dagger-android-processor:2.13'
-    implementation "com.google.dagger:dagger-android-support:2.13"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     testImplementation 'junit:junit:4.12'

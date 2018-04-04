@@ -17,6 +17,7 @@
 package br.com.seiji.kotlinmvvmtest.view
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -25,7 +26,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.seiji.kotlinmvvmtest.R
-
+import br.com.seiji.kotlinmvvmtest.util.ViewModelFactory
+import javax.inject.Inject
 
 class ListFragment : Fragment() {
 
@@ -33,22 +35,32 @@ class ListFragment : Fragment() {
         fun newInstance() = ListFragment()
     }
 
-    private lateinit var repositoriesViewModel: RepositoriesViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
+//        initViewModel()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_main, container, false)
     }
 
-    private fun initViewModel() {
-        repositoriesViewModel = ViewModelProviders.of(this).get(RepositoriesViewModel::class.java)
-        repositoriesViewModel.let { lifecycle.addObserver(it) }
-        repositoriesViewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val viewModel = ViewModelProviders.of(this,viewModelFactory).get(RepositoriesViewModel::class.java)
+        viewModel.let { lifecycle.addObserver(it) }
+        viewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
             Log.d(MainActivity::class.java.simpleName, repositoriesList?.get(0)?.name)
         })
     }
+
+//    private fun initViewModel() {
+//        val repositoriesViewModel : RepositoriesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
+//        repositoriesViewModel.let { lifecycle.addObserver(it) }
+//        repositoriesViewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
+//            Log.d(MainActivity::class.java.simpleName, repositoriesList?.get(0)?.name)
+//        })
+//    }
 }

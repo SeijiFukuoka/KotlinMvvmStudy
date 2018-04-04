@@ -1,24 +1,26 @@
 package br.com.seiji.kotlinmvvmtest
 
+import android.app.Activity
 import android.app.Application
-import br.com.seiji.kotlinmvvmtest.di.*
+import br.com.seiji.kotlinmvvmtest.di.AppComponent
+import br.com.seiji.kotlinmvvmtest.di.AppInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import javax.inject.Inject
 
-class CustomApplication : Application() {
+class CustomApplication : Application(), HasActivityInjector {
 
-    companion object {
-        lateinit var appComponent: AppComponent
-    }
+    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+        @Inject set
+
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
 
-        initializeDagger()
+        AppInjector.initInjector(this)
     }
 
-    fun initializeDagger() {
-        appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .roomModule(RoomModule())
-                .remoteModule(RemoteModule(this)).build()
-    }
+    override fun activityInjector(): DispatchingAndroidInjector<Activity> =
+            activityDispatchingAndroidInjector
 }

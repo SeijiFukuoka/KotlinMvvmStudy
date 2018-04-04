@@ -13,14 +13,24 @@ import javax.inject.Singleton
 
 @Singleton
 class GitHubRepository @Inject constructor(
-        private val roomDataSource: RoomRepositoriesDataSource,
-        private val remoteDataSource: GitHubDataSource
+        private val remoteDataSource: GitHubDataSource,
+        private val roomDataSource: RoomRepositoriesDataSource
 ) : Repository {
 
     val allCompositeDisposable: MutableList<Disposable> = arrayListOf()
 
-    override fun getTotalRepositories() =
-            roomDataSource.repositoriesDao().getRepositoriesTotal()
+    override fun getTotalRepositories(): LiveData<Int> {
+        val mutableLiveData = MutableLiveData<Int>()
+        val disposable = roomDataSource.repositoriesDao().getRepositoriesTotal()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    mutableLiveData.value = response
+                }, { t: Throwable? -> t!!.printStackTrace() })
+        allCompositeDisposable.add(disposable)
+        return mutableLiveData
+    }
+
 
     override fun addRepositories() {
     }
