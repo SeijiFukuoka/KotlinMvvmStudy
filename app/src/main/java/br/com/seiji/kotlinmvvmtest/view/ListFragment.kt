@@ -26,10 +26,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.seiji.kotlinmvvmtest.R
-import br.com.seiji.kotlinmvvmtest.util.ViewModelFactory
+import br.com.seiji.kotlinmvvmtest.di.Injectable
 import javax.inject.Inject
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), Injectable {
 
     companion object {
         fun newInstance() = ListFragment()
@@ -49,10 +49,13 @@ class ListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val viewModel = ViewModelProviders.of(this,viewModelFactory).get(RepositoriesViewModel::class.java)
+        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
         viewModel.let { lifecycle.addObserver(it) }
         viewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
-            Log.d(MainActivity::class.java.simpleName, repositoriesList?.get(0)?.name)
+            Log.d(ListFragment::class.java.simpleName, repositoriesList?.get(0)?.name)
+        })
+        viewModel.getRepositoriesTotal().observe(this, Observer { total ->
+            Log.d(ListFragment::class.java.simpleName, total.toString())
         })
     }
 
