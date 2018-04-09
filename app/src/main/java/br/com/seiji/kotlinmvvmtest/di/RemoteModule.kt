@@ -27,17 +27,19 @@ import br.com.seiji.kotlinmvvmtest.data.repository.GitHubRepository
 import br.com.seiji.kotlinmvvmtest.data.room.RoomRepositoriesDataSource
 import br.com.seiji.kotlinmvvmtest.domain.Constants
 import br.com.seiji.kotlinmvvmtest.util.Tls12SocketFactory
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import okhttp3.Cache
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.File
 import java.util.*
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
@@ -52,10 +54,9 @@ class RemoteModule(val app: CustomApplication) {
 
     @Provides
     @Singleton
-    fun provideGson(): Gson =
-            GsonBuilder()
-                    .setLenient()
-                    .create()
+    fun provideMoshi(): Moshi =
+            Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory()).build()
 
     @Provides
     @Singleton
@@ -65,11 +66,12 @@ class RemoteModule(val app: CustomApplication) {
         if (BuildConfig.DEBUG)
             interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-//        val cacheDir = File(customApplication.cacheDir, UUID.randomUUID().toString())
-//        val cache = Cache(cacheDir, 10 * 1024 * 1024)
+        val cacheDir = File(app.cacheDir, UUID.randomUUID().toString())
+        val cache = Cache(cacheDir, 10 * 1024 * 1024)
 
         val client: OkHttpClient.Builder = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .cache(cache)
                 .followRedirects(true)
                 .followSslRedirects(true)
                 .retryOnConnectionFailure(true)
@@ -105,10 +107,10 @@ class RemoteModule(val app: CustomApplication) {
 
     @Provides
     @Singleton
-    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
+    fun provideRetrofit(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit =
             Retrofit.Builder()
                     .baseUrl(Constants.API__BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(MoshiConverterFactory.create(moshi))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(okHttpClient)
                     .build()

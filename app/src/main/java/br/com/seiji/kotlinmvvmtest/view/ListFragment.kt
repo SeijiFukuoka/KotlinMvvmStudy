@@ -51,7 +51,7 @@ class ListFragment : Fragment(), Injectable {
         super.onActivityCreated(savedInstanceState)
         val viewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
         viewModel.let { lifecycle.addObserver(it) }
-        viewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
+        viewModel.getRepositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
             Log.d(ListFragment::class.java.simpleName, repositoriesList?.get(0)?.name)
         })
         viewModel.getRepositoriesTotal().observe(this, Observer { total ->
@@ -62,7 +62,7 @@ class ListFragment : Fragment(), Injectable {
 //    private fun initViewModel() {
 //        val repositoriesViewModel : RepositoriesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
 //        repositoriesViewModel.let { lifecycle.addObserver(it) }
-//        repositoriesViewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
+//        repositoriesViewModel.getRepositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
 //            Log.d(MainActivity::class.java.simpleName, repositoriesList?.get(0)?.name)
 //        })
 //    }

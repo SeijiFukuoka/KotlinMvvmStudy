@@ -12,7 +12,7 @@ class RepositoriesViewModel @Inject constructor(private val repository: GitHubRe
     private lateinit var liveAvailableExchange: LiveData<List<Repo>>
     private lateinit var liveTotal: LiveData<Int>
 
-    fun getRespositories(query: String, sort: String, page: Int): LiveData<List<Repo>> {
+    fun getRepositories(query: String, sort: String, page: Int): LiveData<List<Repo>> {
         liveAvailableExchange = MutableLiveData<List<Repo>>()
         liveAvailableExchange = repository.getRepositoriesList(query, sort, page)
         return liveAvailableExchange

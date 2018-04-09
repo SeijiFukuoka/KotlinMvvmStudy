@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
 //            val viewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
 //            viewModel.let { lifecycle.addObserver(it) }
-//            viewModel.getRespositories("kotlin", "starts", 1).observe(this, Observer { repositoriesList ->
+//            viewModel.getRepositories("kotlin", "starts", 1).observe(this, Observer { repositoriesList ->
 //                Log.d(MainActivity::class.java.simpleName, repositoriesList?.get(0)?.name)
 //            })
 //            viewModel.getRepositoriesTotal().observe(this, Observer { total -> Log.d(MainActivity::class.java.simpleName, total.toString()) })
