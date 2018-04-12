@@ -123,9 +123,7 @@ class RemoteModule(val app: CustomApplication) {
     @Singleton
     fun provideRemoteDataSource(apiService: ApiService): GitHubDataSource = GitHubDataSource(apiService)
 
-    @Provides
-    @Singleton
-    fun provideRepository(gitHubDataSource: GitHubDataSource, roomRepositoriesDataSource: RoomRepositoriesDataSource): GitHubRepository = GitHubRepository(gitHubDataSource, roomRepositoriesDataSource)
+
 }
 
 

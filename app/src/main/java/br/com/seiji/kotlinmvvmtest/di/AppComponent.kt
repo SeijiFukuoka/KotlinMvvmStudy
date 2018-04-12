@@ -13,7 +13,7 @@ import javax.inject.Singleton
         RoomModule::class,
         RemoteModule::class,
         ActivityBuilder::class,
-        ViewModelModule::class))
+        PresenterViewModule::class))
 interface AppComponent {
 
     @Component.Builder

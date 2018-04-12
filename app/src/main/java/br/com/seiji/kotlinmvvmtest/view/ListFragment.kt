@@ -19,6 +19,7 @@ package br.com.seiji.kotlinmvvmtest.view
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -35,8 +36,11 @@ class ListFragment : Fragment(), Injectable {
         fun newInstance() = ListFragment()
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+//    @Inject
+//    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+//    @Inject
+//    lateinit var repositoriesPresenterImpl: RepositoriesPresenterImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,16 +51,25 @@ class ListFragment : Fragment(), Injectable {
         return inflater.inflate(R.layout.activity_main, container, false)
     }
 
+    override fun getContext(): Context {
+        return activity!!.applicationContext
+    }
+
+//    override fun showView() {
+//        Log.d("TAG", "showView")
+//    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
-        viewModel.let { lifecycle.addObserver(it) }
-        viewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
-            Log.d(ListFragment::class.java.simpleName, repositoriesList?.get(0)?.name)
-        })
-        viewModel.getRepositoriesTotal().observe(this, Observer { total ->
-            Log.d(ListFragment::class.java.simpleName, total.toString())
-        })
+//        repositoriesPresenterImpl.test()
+//        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(RepositoriesViewModel::class.java)
+//        viewModel.let { lifecycle.addObserver(it) }
+//        viewModel.getRespositories("kotlin", "starts", 1)?.observe(this, Observer { repositoriesList ->
+//            Log.d(ListFragment::class.java.simpleName, repositoriesList?.get(0)?.name)
+//        })
+//        viewModel.getRepositoriesTotal().observe(this, Observer { total ->
+//            Log.d(ListFragment::class.java.simpleName, total.toString())
+//        })
     }
 
 //    private fun initViewModel() {
